@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 const testJwtRouter = require('./controllers/test-jwt');
 const authCtrl = require('./controllers/auth');
 const usersCtrl = require('./controllers/users');
+const jobsCtrl = require('./controllers/jobs');
 
 // MiddleWare
 const verifyToken = require('./middleware/verify-token');
@@ -31,6 +32,7 @@ app.use(logger('dev'));
 // Public
 app.use('/auth', authCtrl);
 app.use('/test-jwt', testJwtRouter);
+app.use('/jobs', jobsCtrl);
 
 // Protected Routes
 app.use(verifyToken);
