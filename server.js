@@ -32,11 +32,12 @@ app.use(logger('dev'));
 // Public
 app.use('/auth', authCtrl);
 app.use('/test-jwt', testJwtRouter);
-app.use('/jobs', jobsCtrl);
+
 
 // Protected Routes
 app.use(verifyToken);
 app.use('/users', usersCtrl);
+app.use('/jobs', jobsCtrl);
 
 app.listen(PORT, () => {
   console.log('The express app is ready!');
