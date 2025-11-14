@@ -33,4 +33,19 @@ router.post('/', async (req, res) => {
   }
 });
 
+//VIEW BIDS for specific job
+router.get('/job/:jobId', async (req, res) => {
+  try {
+    const { jobId } = req.params;
+
+    const bids = await Application.find({ jobId })
+      .populate('freelancerId', 'name email') 
+      .sort({ createdAt: -1 });
+
+    res.json(bids);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
