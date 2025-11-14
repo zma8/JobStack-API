@@ -31,6 +31,46 @@ router.get('/', async (req, res) => {
 });
 
 
+// FILTER jobs by category
+router.get('/category/:categoryName', async (req, res) => {
+  try {
+    const { categoryName } = req.params;
+
+    // Check if category is valid
+    const validCategories = [
+      "Web Development",
+      "Mobile Development",
+      "UI/UX Design",
+      "Graphic Design",
+      "Writing & Translation",
+      "Digital Marketing",
+      "Video & Animation",
+      "Music & Audio",
+      "Business",
+      "Data & Analytics",
+      "AI & Machine Learning",
+      "Game Development",
+      "Software Testing",
+      "Cybersecurity",
+      "Other"
+    ];
+
+    if (!validCategories.includes(categoryName)) {
+      return res.status(400).json({ error: "Invalid category name" });
+    }
+
+    const jobs = await Job.find({ category: categoryName })
+      .populate("owner")
+      .populate("bids");
+
+    res.status(200).json(jobs);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
 // Display specific job by ID
 router.get('/:id', async (req, res) => {
   try {
