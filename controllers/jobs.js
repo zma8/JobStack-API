@@ -4,11 +4,18 @@ const express = require('express');
 const router = express.Router();
 
 // Create a New job
-router.post('/', async (req, res) =>{
-    try {
-        const createdJob = await Job.create(req.body);
-        res.status(201).json(createdJob);
-    } catch (err) {
+router.post('/', async (req, res) => {
+  try {
+
+    const owner = req.user._id;
+
+    const createdJob = await Job.create({
+      ...req.body,
+      owner
+    });
+
+    res.status(201).json(createdJob);
+  } catch (err) {
     res.status(500).json({ err: err.message });
   }
 });
