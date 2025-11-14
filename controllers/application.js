@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-//VIEW BIDS for specific job
+// VIEW BIDS for specific job
 router.get('/job/:jobId', async (req, res) => {
   try {
     const { jobId } = req.params;
@@ -47,5 +47,54 @@ router.get('/job/:jobId', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+
+// ACCEPT a Bid
+router.patch('/:bidId/accept', async (req, res) => {
+  try {
+    const { bidId } = req.params;
+    const userId = req.user._id; 
+
+    // Find the bid
+    const bid = await Application.findById(bidId);
+    if (!bid) {
+      return res.status(404).json({ error: 'Bid not found' });
+    }
+
+    // Find the related job and check the owner
+    const job = await Job.findById(bid.jobId);
+    if (!job) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    // Ensure the user is the owner of the job
+    if (job.owner.toString() !== userId.toString()) {
+      return res.status(403).json({ error: 'Only the job owner can accept a bid' });
+    }
+
+    // Mark the selected bid as accepted
+    bid.status = 'accepted';
+    await bid.save();
+
+    // Reject all other bids for this job
+    await Application.updateMany(
+      { jobId: bid.jobId, _id: { $ne: bidId } },
+      { status: 'rejected' }
+    );
+
+    // 6) Update job status
+    job.status = 'in-progress';
+    await job.save();
+
+    res.json({
+      message: 'Bid accepted and all other bids were automatically rejected.',
+      acceptedBid: bid,
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 module.exports = router;
