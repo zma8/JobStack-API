@@ -34,3 +34,23 @@ router.post('/',async(requestAnimationFrame,res)=>{
          res.status(500).json({ error: err.message });
     }
 });
+
+router.get('/freelancer/:freelancerId',async (req,res)=>{
+    try{
+        const {freelancelId}=req.params;
+
+        const reviews=await Review.find({freelancelId}).populate('clientId','username');
+
+        const freelancerProfile=await FreelancerProfile.findOne({userId:freelancelId});
+        const averageRating=freelancerProfile?freelancerProfile.averageRating:0;
+
+        res.json({
+            reviews,
+            averageRating,
+            totalReviews:reviews.length
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
