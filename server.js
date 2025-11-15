@@ -16,6 +16,8 @@ const authCtrl = require('./controllers/auth');
 const usersCtrl = require('./controllers/users');
 const jobsCtrl = require('./controllers/jobs');
 const appCtrl = require('./controllers/application');
+const chatCtrl = require('./controllers/chat');       
+const reviewCtrl = require('./controllers/review'); 
 
 // MiddleWare
 const verifyToken = require('./middleware/verify-token');
@@ -40,6 +42,8 @@ app.use(verifyToken);
 app.use('/users', usersCtrl);
 app.use('/jobs', jobsCtrl);
 app.use('/bids', appCtrl);
+app.use('/chats', chatCtrl);   
+app.use('/reviews', reviewCtrl);  
 
 app.listen(PORT, () => {
   console.log('The express app is ready!');
