@@ -62,3 +62,35 @@ router.get('/;chatId/messages',async (req,res)=>{
     res.status(500).json({ error: err.message });  
    }
 });
+
+router.post('/:chatId/messages', async (req, res) => {
+  try {
+    const { chatId } = req.params;
+    const { senderId, text } = req.body;
+
+    const chat = await Chat.findById(chatId);
+    
+    if (!chat) {
+      return res.status(404).json({ error: 'Chat not found' });
+    }
+
+    const newMessage = {
+      sender: senderId,
+      text,
+      createdAt: new Date()
+    };
+
+    chat.messages.push(newMessage);
+    await chat.save();
+
+    await chat.populate('messages.sender', 'username');
+    const savedMessage = chat.messages[chat.messages.length - 1];
+
+    res.status(201).json(savedMessage);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+module.exports = router;
