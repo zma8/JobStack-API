@@ -3,21 +3,21 @@ const mongoose = require('mongoose');
 const userSchema = mongoose.Schema({
   username: {
     type: String,
-    require: true,
+    required: true,
   },
   email: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
   },
   hashedPassword: {
     type: String,
-    require: true,
+    required: true,
   },
   role: {
     type: String,
     enum: ['client', 'freelancer'],
-    require: true,
+    required: true,
   },
 }, { timestamps: true });
 
