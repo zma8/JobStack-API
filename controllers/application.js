@@ -7,15 +7,14 @@ const Job = require('../models/Job.js');
 // Creat Bid / Application
 router.post('/', async (req, res) => {
   try {
-    const { jobId, freelancerId, amount, message } = req.body;
+    const { jobId, amount, message } = req.body; 
+    const freelancerId = req.user._id; 
 
-    // Check if job exists
     const job = await Job.findById(jobId);
     if (!job) {
       return res.status(404).json({ error: 'Job not found' });
     }
 
-    // Create new bid
     const application = await Application.create({
       jobId,
       freelancerId,
