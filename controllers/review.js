@@ -54,3 +54,22 @@ router.get('/freelancer/:freelancerId',async (req,res)=>{
         res.status(500).json({ error: err.message });
     }
 });
+
+router.get('/:reviewId',async(req,res)=>{
+    try{
+        const {reviewId}=req.params;
+
+        const review=await Review.findById(reviewId).populate('freelancerId','username').populate('clientId','username');
+
+        if(!review){
+            return res.status(404).json({error:'Review not found'});
+        }
+
+        res.json(review);
+    }catch(err){
+     console.error(err);
+    res.status(500).json({ error: err.message });
+    }
+});
+
+module.exports=router;
