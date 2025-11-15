@@ -14,6 +14,8 @@ const PORT = process.env.PORT || 3000;
 const testJwtRouter = require('./controllers/test-jwt');
 const authCtrl = require('./controllers/auth');
 const usersCtrl = require('./controllers/users');
+const jobsCtrl = require('./controllers/jobs');
+const appCtrl = require('./controllers/application');
 
 // MiddleWare
 const verifyToken = require('./middleware/verify-token');
@@ -32,9 +34,12 @@ app.use(logger('dev'));
 app.use('/auth', authCtrl);
 app.use('/test-jwt', testJwtRouter);
 
+
 // Protected Routes
 app.use(verifyToken);
 app.use('/users', usersCtrl);
+app.use('/jobs', jobsCtrl);
+app.use('/bids', appCtrl);
 
 app.listen(PORT, () => {
   console.log('The express app is ready!');
