@@ -19,3 +19,29 @@ router.get('/user/:userId', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+router.post('/',async(req,res)=>{
+    try {
+        const { freelancerId, clientId } = req.body;
+        const existingChat = await Chat.findOne({
+        participants: { $all: [freelancerId, clientId] }
+    });
+
+    if (existingChat) {
+      return res.json(existingChat);
+    }
+
+     const newChat = await Chat.create({
+      participants: [freelancerId, clientId],
+      messages: []
+    });
+
+     await newChat.populate('participants', 'username email role');
+    
+     res.status(201).json(newChat);
+    } catch (error) {
+          console.error(err);
+         res.status(500).json({ error: err.message });  
+    }
+});
+
