@@ -45,3 +45,20 @@ router.post('/',async(req,res)=>{
     }
 });
 
+router.get('/;chatId/messages',async (req,res)=>{
+   try{
+    const{chatId}=req.params;
+
+    const chat=await Chat.findById(chatId).populate('messages.sender','username');
+
+    if(!chat){
+        return res.status(404).json({error:'Chat not found'});
+    }
+
+    res.json(chat.messages);
+
+   }catch{
+     console.error(err);
+    res.status(500).json({ error: err.message });  
+   }
+});
