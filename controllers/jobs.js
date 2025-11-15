@@ -23,7 +23,15 @@ router.post('/', async (req, res) => {
 // Display all Jobs
 router.get('/', async (req, res) => {
   try {
-    const jobs = await Job.find().populate('owner').populate('bids');
+    const jobs = await Job.find()
+      .populate('owner')
+      .populate({
+        path: 'bids',
+        populate: {
+          path: 'freelancerId',
+          select: 'username'
+        }
+      });
     res.status(200).json(jobs);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -74,7 +82,16 @@ router.get('/category/:categoryName', async (req, res) => {
 // Display specific job by ID
 router.get('/:id', async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id).populate('owner').populate('bids');
+    const job = await Job.findById(req.params.id)
+      .populate('owner')
+      .populate({
+        path: 'bids',
+        populate: {
+          path: 'freelancerId',
+          select: 'username role'
+        }
+      });
+      
     if (!job) return res.status(404).json({ message: 'Job not found' });
     res.status(200).json(job);
   } catch (error) {
