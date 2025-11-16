@@ -99,27 +99,45 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// UPDATE a jobs
+// UPDATE a job
 router.put('/:id', async (req, res) => {
   try {
-    const job = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: 'Job not found' });
-    res.status(200).json(job);
+
+    // Check owner
+    if (job.owner.toString() !== req.user._id) {
+      return res.status(403).json({ message: "Not authorized to edit this job" });
+    }
+
+    const updated = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    res.status(200).json(updated);
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 });
 
+
 // DELETE a job
 router.delete('/:id', async (req, res) => {
   try {
-    const job = await Job.findByIdAndDelete(req.params.id);
+    const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: 'Job not found' });
+
+    // Check owner
+    if (job.owner.toString() !== req.user._id) {
+      return res.status(403).json({ message: "Not authorized to delete this job" });
+    }
+
+    await job.deleteOne();
     res.status(200).json({ message: 'Job deleted successfully' });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 module.exports = router;
   
