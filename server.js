@@ -42,20 +42,6 @@ app.use(cors());
 app.use(express.json());
 app.use(logger('dev'));
 
-// Public
-app.use('/auth', authCtrl);
-app.use('/test-jwt', testJwtRouter);
-
-
-// Protected Routes
-app.use(verifyToken);
-app.use('/users', usersCtrl);
-app.use('/jobs', jobsCtrl);
-app.use('/bids', appCtrl);
-app.use('/chats', chatCtrl);   
-app.use('/reviews', reviewCtrl);  
-
-
 io.on('connection', (socket) => {
   console.log('👤 User connected:', socket.id);
 
@@ -88,6 +74,21 @@ io.on('connection', (socket) => {
 });
 
 
-app.listen(PORT, () => {
+
+// Public
+app.use('/auth', authCtrl);
+app.use('/test-jwt', testJwtRouter);
+
+
+// Protected Routes
+app.use(verifyToken);
+app.use('/users', usersCtrl);
+app.use('/jobs', jobsCtrl);
+app.use('/bids', appCtrl);
+app.use('/chats', chatCtrl);   
+app.use('/reviews', reviewCtrl);  
+
+server.listen(PORT, () => {
   console.log('The express app is ready!');
+  console.log('✅ Socket.IO is running');
 });
