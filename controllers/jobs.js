@@ -99,7 +99,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// UPDATE a job
+// UPDATE a jobs
 router.put('/:id', async (req, res) => {
   try {
     const job = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
