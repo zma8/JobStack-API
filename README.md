@@ -99,3 +99,6 @@ https://job-stack-front-end.vercel.app/
 
 ## Authors
 Zainab Moosa - https://github.com/zma8
+Ali Qambar
+Zainab Mohammed
+ 
