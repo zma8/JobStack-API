@@ -45,7 +45,7 @@ router.post('/',async(req,res)=>{
     }
 });
 
-router.get('/;chatId/messages',async (req,res)=>{
+router.get('/:chatId/messages',async (req,res)=>{
    try{
     const{chatId}=req.params;
 
