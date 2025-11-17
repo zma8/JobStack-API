@@ -102,3 +102,4 @@ Zainab Moosa - https://github.com/zma8
 Ali Qambar
 Zainab Mohammed
  
+For frontend documentation, see the [https://github.com/zma8/JobStack-API](https://github.com/zma8/JobStack-FrontEnd)
