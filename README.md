@@ -1,5 +1,8 @@
 # JobStack
 
+<img width="3024" height="1654" alt="image" src="https://github.com/user-attachments/assets/fb6edcfa-97e8-4dc1-8278-bfea0b3e15f4" />
+
+
 ## General Users
 
 #### 1. Create Account  
@@ -84,4 +87,15 @@ NoSQL database used to store and manage application data.
 Used to define schemas and interact with the MongoDB database.
 
 
-## Next Steps:
+## Future work 
+1. admin page and dashboard
+2. adding the project after its done
+
+## Trello 
+https://trello.com/b/4ptsB6SO/jobstack
+
+## Deployment 
+https://job-stack-front-end.vercel.app/
+
+## Authors
+Zainab Moosa - https://github.com/zma8
