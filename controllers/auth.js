@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const FreelancerProfile = require('../models/FreelancerProfile');
 
 const router = express.Router();
 
@@ -20,14 +21,30 @@ router.post('/sign-up', async (req, res) => {
 
     const newUser = await User.create(req.body);
 
+
+    let freelancerProfile = null;
+    if (newUser.role === 'freelancer') {
+      freelancerProfile = await FreelancerProfile.create({
+        userId: newUser._id,
+        skills: [],
+        averageRating: 0
+      });
+    }
+
     const payload = {
       username: newUser.username,
       _id: newUser._id,
+      role: newUser.role,
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET);
 
-    res.json({ token, user: newUser });
+    const userResponse = {
+      ...newUser.toObject(),
+      freelancerProfile: freelancerProfile
+    };
+
+    res.json({ token, user: userResponse });
   } catch (err) {
     console.log(err);
     res.status(500).json({ err: 'Something went wrong!' });
@@ -48,14 +65,27 @@ router.post('/sign-in', async (req, res) => {
       return res.status(401).json({ err: 'Username or Password is invalid' });
     }
 
+
+    let freelancerProfile = null;
+    if (userInDatabase.role === 'freelancer') {
+      freelancerProfile = await FreelancerProfile.findOne({ userId: userInDatabase._id });
+    }
+
     const payload = {
       username: userInDatabase.username,
       _id: userInDatabase._id,
+      role: userInDatabase.role,
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET);
 
-    res.json({ token, user: userInDatabase });
+
+    const userResponse = {
+      ...userInDatabase.toObject(),
+      freelancerProfile: freelancerProfile
+    };
+
+    res.json({ token, user: userResponse });
   } catch (err) {
     console.log(err);
     res.status(500).json({ err: 'Invalid Username or Password' });
